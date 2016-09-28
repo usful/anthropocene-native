@@ -33,19 +33,15 @@ export default class VideoCard extends Component {
   }
 
   render() {
-    console.log(this.props.video);
-
     let videoStyle = {
       transform: [{translateY: HEIGHT * 0.75 * -this.props.offset}]
     };
 
-    let textStyle = {
-      transform: [{translateY: HEIGHT * 0.25 * -this.props.offset}]
-    };
+    let colors = [`rgba(0,0,0,0.1)`, `rgba(0,0,0,0.4)`];
 
     return (
       <View style={styles.container}>
-        <Animated.View style={[styles.videoWrapper, videoStyle]}>
+        <Animated.View style={[styles.videoWrapper, videoStyle]} onPress={(e) => {}}>
           <Video source={{uri: this.props.video}} // Can be a URL or a local file.
                      rate={1.0}                   // 0 is paused, 1 is normal.
                      volume={1.0}                 // 0 is muted, 1 is normal.
@@ -67,8 +63,8 @@ export default class VideoCard extends Component {
                      }}    // Callback when video cannot be loaded
                      style={styles.video}/>
         </Animated.View>
-        <LinearGradient colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.5)']} style={styles.gradient} />
-        <Animated.Text style={[styles.text, textStyle]}>{this.props.text}</Animated.Text>
+        <LinearGradient colors={colors} style={styles.gradient} />
+        <Text style={styles.text}>{this.props.text}</Text>
       </View>
     );
   }
@@ -77,8 +73,8 @@ export default class VideoCard extends Component {
 const styles = StyleSheet.create({
   text: {
     fontFamily: 'Baskerville-Regular',
-    fontSize: 24,
-    color: '#ffffff',
+    fontSize: 28,
+    color: 'rgba(255,255,255,0.9)',
     backgroundColor: 'transparent',
     paddingHorizontal: width*0.2,
     textAlign: 'center'
@@ -94,7 +90,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     height: HEIGHT,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 6
   },
   videoWrapper: {
     position: 'absolute',

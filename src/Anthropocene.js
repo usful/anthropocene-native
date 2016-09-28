@@ -6,6 +6,10 @@ import {ScrollView, StyleSheet, View, Text} from 'react-native';
 
 import VideoCard from './components/VideoCard';
 
+let {width, height} = Dimensions.get('window');
+const VIDS_PER_SCREEN = 2.5;
+const HEIGHT = Math.ceil(height / VIDS_PER_SCREEN);
+
 let videos = [
   {
     video: "assets/vids/empty-lake",
@@ -40,10 +44,13 @@ export default class Anthropocene extends Component {
 
     this.state = {
       offset: 0
-    }
+    };
   }
 
   onScroll(e) {
+    let cardSize = e.nativeEvent.contentSize.height/HEIGHT;
+
+    //e.nativeEvent.contentOffset.y - Math.floor(e.nativeEvent.contentOffset.y / cardSize);
     this.setState({offset: e.nativeEvent.contentOffset.y/e.nativeEvent.contentSize.height});
   }
 
