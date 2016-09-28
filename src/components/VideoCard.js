@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react';
 
-import {Animated, Dimensions, StyleSheet, View, Text} from 'react-native';
+import {Animated, Dimensions, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import Video from 'react-native-video';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -21,15 +21,34 @@ export default class VideoCard extends Component {
     super(props);
 
     this.state = {
-      anim: new Animated.Value(0)
+      anim: new Animated.Value(0),
+      pressCount: 0
     }
+  }
+
+  componentWillMount() {
+    //Hook up event listener.
+    console.log('Video Card mounted', this.props.video);
+  }
+
+  componentWillUnmount() {
+    //Remove event listeners here.
+    console.log('Video Card unmounted', this.props.video);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.video !== this.props.video) return true;
     if (nextProps.text !== this.props.text) return true;
     if (nextProps.offset !== this.props.offset) return true;
+    if (nextState.pressCount !== this.state.pressCount) return true;
+
     return false;
+  }
+
+  videoPressed(e) {
+    this.setState({
+      pressCount: this.state.pressCount + 1
+    })
   }
 
   render() {
@@ -40,32 +59,35 @@ export default class VideoCard extends Component {
     let colors = [`rgba(0,0,0,0.1)`, `rgba(0,0,0,0.4)`];
 
     return (
-      <View style={styles.container}>
-        <Animated.View style={[styles.videoWrapper, videoStyle]} onPress={(e) => {}}>
-          <Video source={{uri: this.props.video}} // Can be a URL or a local file.
-                     rate={1.0}                   // 0 is paused, 1 is normal.
-                     volume={1.0}                 // 0 is muted, 1 is normal.
-                     muted={true}                // Mutes the audio entirely.
-                     paused={false}               // Pauses playback entirely.
-                     resizeMode="cover"           // Fill the whole screen at aspect ratio.
-                     repeat={true}                // Repeat forever.
-                     playInBackground={false}     // Audio continues to play when app entering background.
-                     playWhenInactive={false}     // [iOS] Video continues to play when control or notification center are shown.
-                     onLoadStart={() => {
-                     }} // Callback when video starts to load
-                     onLoad={() => {
-                     }}    // Callback when video loads
-                     onProgress={() => {
-                     }}    // Callback every ~250ms with currentTime
-                     onEnd={() => {
-                     }}           // Callback when playback finishes
-                     onError={() => {
-                     }}    // Callback when video cannot be loaded
-                     style={styles.video}/>
-        </Animated.View>
-        <LinearGradient colors={colors} style={styles.gradient} />
-        <Text style={styles.text}>{this.props.text}</Text>
-      </View>
+      <TouchableOpacity onPress={(e) => this.videoPressed(e)}>
+        <View style={styles.container}>
+          <Animated.View style={[styles.videoWrapper, videoStyle]} onPress={(e) => {}}>
+            <Video source={{uri: this.props.video}} // Can be a URL or a local file.
+                       rate={1.0}                   // 0 is paused, 1 is normal.
+                       volume={1.0}                 // 0 is muted, 1 is normal.
+                       muted={true}                // Mutes the audio entirely.
+                       paused={false}               // Pauses playback entirely.
+                       resizeMode="cover"           // Fill the whole screen at aspect ratio.
+                       repeat={false}                // Repeat forever.
+                       playInBackground={false}     // Audio continues to play when app entering background.
+                       playWhenInactive={false}     // [iOS] Video continues to play when control or notification center are shown.
+                       onLoadStart={() => {
+                       }} // Callback when video starts to load
+                       onLoad={() => {
+                       }}    // Callback when video loads
+                       onProgress={() => {
+                       }}    // Callback every ~250ms with currentTime
+                       onEnd={() => {
+                       }}           // Callback when playback finishes
+                       onError={() => {
+                       }}    // Callback when video cannot be loaded
+                       style={styles.video}/>
+          </Animated.View>
+          <LinearGradient colors={colors} style={styles.gradient} />
+          <Text style={styles.text}>{this.props.text}</Text>
+          <Text style={styles.text}>{this.state.pressCount}</Text>
+        </View>
+      </TouchableOpacity>
     );
   }
 }
